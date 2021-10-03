@@ -10,11 +10,11 @@ export const NoteSchema = new Schema(
     // value: { type: Number, required: true, default: 0 }
   },
   { timestamps: true, toJSON: { virtuals: true } }
-
 )
 NoteSchema.virtual('creator', {
   localField: 'creatorId',
   foreignField: '_id',
   ref: 'Account',
   justOne: true
-})
+}
+)

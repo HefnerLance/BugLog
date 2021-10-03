@@ -9,10 +9,20 @@ export class BugsController extends BaseController {
     this.router
       .get('', this.getBugs)
       .get('/:bugId', this.getBugById)
+      .get('/:bugId/notes', this.getBugNotes)
       .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.createBug)
       .put('/:bugId', this.editBug)
       .delete('/:bugId', this.removeBug)
+  }
+
+  async getBugNotes(req, res, next) {
+    try {
+      const bugNotes = await bugsService.getBugNotes(req.params.bugId)
+      res.send(bugNotes)
+    } catch (error) {
+      next(error)
+    }
   }
 
   async getBugs(req, res, next) {

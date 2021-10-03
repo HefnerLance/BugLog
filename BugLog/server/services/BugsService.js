@@ -1,7 +1,25 @@
 import { dbContext } from '../db/DbContext'
 import { BadRequest, Forbidden } from '../utils/Errors'
+// import { notesService } from './NotesService'
 
 class BugsService {
+  async getBugUsers(userId, bugId) {
+    const foundUsers = await dbContext.TrackedBugs.find({ bugId }).sort('-tracker').populate('tracker', 'name picture')
+    return foundUsers
+  }
+
+  async getTrackedbugs(userid) {
+    const trackedbugs = await dbContext.TrackedBugs.find({ userid }).sort('-bug').populate('creator', 'name picture')
+    return trackedbugs
+  }
+
+  async getBugNotes(bugId) {
+    const foundBugnotes = await dbContext.Notes.find({ bugId }).populate('creator', 'name picture')
+    if (!foundBugnotes) {
+      throw new BadRequest('invalid bug id')
+    } return foundBugnotes.filter(n => n.bugId !== bugId)
+  }
+
   async getBugs(query) {
     const bugs = await dbContext.Bugs.find(query).sort('-updatedAt').populate('creator', 'name picture')
     return bugs
