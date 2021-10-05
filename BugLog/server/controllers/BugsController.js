@@ -8,12 +8,22 @@ export class BugsController extends BaseController {
     super('api/bugs')
     this.router
       .get('', this.getBugs)
-      .get('/:bugId', this.getBugById)
       .get('/:bugId/notes', this.getBugNotes)
+      .get('/:bugId', this.getBugById)
       .use(Auth0Provider.getAuthorizedUserInfo)
+      .post('/:bugid/trackedbugs', this.trackedBug)
       .post('', this.createBug)
       .put('/:bugId', this.editBug)
       .delete('/:bugId', this.removeBug)
+  }
+
+  async trackedBug(req, res, next) {
+    try {
+      const trackedBug = await bugsService.createBug(req.body)
+      res.send(trackedBug)
+    } catch (error) {
+      next(error)
+    }
   }
 
   async getBugNotes(req, res, next) {
@@ -49,6 +59,7 @@ export class BugsController extends BaseController {
     try {
       req.body.creatorId = req.userInfo.id
       const bug = await bugsService.createBug(req.body)
+      logger.log(res)
       res.send(bug)
     } catch (error) {
       next(error)

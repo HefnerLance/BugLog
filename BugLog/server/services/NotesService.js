@@ -9,12 +9,11 @@ class NotesService {
     return notes
   }
 
-  async removeNote(noteId, userid, body) {
+  async removeNote(noteId, userid) {
     const foundNote = await this.getNoteById(noteId)
-    if (userid !== noteId.creatorId.toString()) {
+    if (userid !== foundNote.creatorId.toString()) {
       throw new Forbidden('you cannot delete a note that isnt yours')
     } await foundNote.remove()
-    return foundNote
   }
 
   async getNoteById(noteId) {

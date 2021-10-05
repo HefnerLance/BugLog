@@ -20,7 +20,7 @@ export const BugSchema = new Schema(
 )
 BugSchema.virtual('creator', {
   localField: 'creatorId',
-  foreignField: '_id',
   ref: 'Account',
+  foreignField: '_id',
   justOne: true
 })

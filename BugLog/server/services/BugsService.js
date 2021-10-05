@@ -3,14 +3,42 @@ import { BadRequest, Forbidden } from '../utils/Errors'
 // import { notesService } from './NotesService'
 
 class BugsService {
-  async getBugUsers(userId, bugId) {
-    const foundUsers = await dbContext.TrackedBugs.find({ bugId }).sort('-tracker').populate('tracker', 'name picture')
-    return foundUsers
+  async deleteTrackedBug(bugId, userId) {
+    const bugToDelete = await this.getTrackedBug(bugId)
+    if (userId !== bugToDelete.accountId.toString()) {
+      throw new Forbidden('you cannot delete this')
+    }
+    const deletedBug = await dbContext.TrackedBugs.findOneAndDelete({ bugId: bugId, accountId: userId })
+    await dbContext.TrackedBugs.remove(deletedBug, bugToDelete)
   }
 
   async getTrackedbugs(userid) {
-    const trackedbugs = await dbContext.TrackedBugs.find({ userid }).sort('-bug').populate('creator', 'name picture')
+    const trackedbugs = await dbContext.TrackedBugs.find({ accountId: userid }).sort('-bug').populate('creator').populate('bug')
     return trackedbugs
+  }
+
+  // fantasy hand egg for how to stop user from tracking twice
+  async createTrackedBug(body) {
+    // const checkfortrackedbug = await this.getTrackedbugs(body.accountId)
+
+    const newbug = await dbContext.TrackedBugs.create(body)
+    await newbug.populate('creator', 'name picture')
+    await newbug.populate('bug', 'id')
+    await newbug.populate('tracker', 'name picture')
+    return newbug
+  }
+
+  async getTrackedBug(bugId) {
+    const trackedBug = await dbContext.TrackedBugs.findById(bugId)
+    trackedBug.populate('creator', 'name picture')
+    trackedBug.populate('bug', 'id')
+    trackedBug.populate('tracker', 'name picture')
+    return trackedBug
+  }
+
+  async getBugUsers(userId, bugId) {
+    const foundUsers = await dbContext.TrackedBugs.find({ bugId: bugId }).sort('-tracker').populate('creator', 'name picture').populate('tracker')
+    return foundUsers
   }
 
   async getBugNotes(bugId) {
@@ -38,10 +66,15 @@ class BugsService {
     return bug.populate('creator', 'name picture')
   }
 
-  async editBug(bugId, userid, body) {
+  // FIXME something is wrong with the if statement or i am not getting the id through properly
+  async editBug(bugId, userId, body) {
     const bug = await this.getBugById(bugId)
-    if (userid !== bug.creatorId.toString() || bug.closed !== false) {
+    const bugCreatorId = bug.creatorId.toString()
+    if (userId !== bugCreatorId) {
       throw new Forbidden('you cannot edit this bug')
+    }
+    if (bug.closed) {
+      throw new Forbidden('this bug is closed')
     }
     bug.title = body.title || bug.title
     bug.description = body.description || bug.description
@@ -52,7 +85,7 @@ class BugsService {
 
   async removeBug(bugId, userid, body) {
     const bug = await this.getBugById(bugId)
-    if (userid !== bug.creatorId.toString() && bug.closed !== false) {
+    if (userid !== bug.creatorId.toString() || bug.closed !== false) {
       throw new Forbidden('this bug is closed')
     }
 
