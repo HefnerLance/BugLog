@@ -1,5 +1,5 @@
 <template>
-  <div class="bug-component">
+  <div class="BugTracked">
     <div>
       <button @click.prevent="sortByPriorityAscending">
         sort by priority ^
@@ -8,10 +8,7 @@
         sort by priority V
       </button>
       <button @click.prevent="filterClosedBugs">
-        sort closed
-      </button>
-      <button @click.prevent="filterClosedAscending">
-        sort closed
+        Hide closed
       </button>
     </div>
     <!-- i think this thing can change bg color when the statement is truw??????      V V  v v v v vVv !-->
@@ -22,7 +19,7 @@
         </ul>
         <ul>
           <router-link :to="{name: 'BugDetails', params:{bugId: bug.id}}">
-            <button type="submit selectable">
+            <button type="submit">
               More details
             </button>
           </router-link>
@@ -63,8 +60,8 @@
         <li class="list-group-item">
           {{ bug.updatedAt }}
         </li>
-        <button @click.prevent="createTrackedBug">
-          Track this Bug
+        <button @click.prevent="untrackBug">
+          Delete Tracked Bug
         </button>
       </ul>
     </div>
@@ -89,11 +86,10 @@ export default {
     const form = ref({ showForm: false })
     return {
       form,
-      async createTrackedBug() {
-        const body = {}
-        body.bugId = props.bug.id
-
-        await bugsService.createTrackedBug(body)
+      async untrackBug() {
+        // const accountId = AppState.account.id
+        const bugId = props.bug.id
+        await bugsService.untrackBug(bugId)
       },
       async sortByPriorityAscending() {
         AppState.bugs.sort((a, b) => a.priority - b.priority)
@@ -101,16 +97,26 @@ export default {
       async sortByPriorityDescending() {
         AppState.bugs.sort((a, b) => -a.priority - -b.priority)
       },
-      async filterClosedAscending() {
-        AppState.bugs.sort((a, b) => a.closed - b.closed)
-      },
       async filterClosedBugs() {
-        AppState.bugs.sort((a, b) => -a.closed - -b.closed)
+        const ascending = ref(true)
+        const lowFilter = ref(false)
+        function lowFilterFunction(m) {
+          if (lowFilter.value) {
+            return m.score > 45
+          }
+          return true
+        }
+        function scoreSorter(a, b) {
+          if (ascending.value) {
+            return b.score - a.score
+          }
+          return a.score - b.score
+        }
       },
       async editBug() {
 
       },
-      bugs: computed(() => AppState.bugs),
+      // bugs: computed(() => AppState.trackedbugs),
       users: computed(() => AppState.account)
     }
   }

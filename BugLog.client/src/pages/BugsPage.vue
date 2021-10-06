@@ -1,7 +1,7 @@
 <template>
   <div class="component">
     <p>BugsPage</p>
-    <Bug v-for="b in bugs" :key="b.id" :bug="b" />
+    <Bug v-for="b in bugs" :key="b.id" :bug="b" :account="account" />
   </div>
 </template>
 
@@ -16,7 +16,9 @@ export default {
     onMounted(async() => {
       bugsService.getBugs()
     })
+
     return {
+
       bugs: computed(() => AppState.bugs),
       account: computed(() => AppState.account)
     }

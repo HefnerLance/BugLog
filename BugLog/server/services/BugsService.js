@@ -13,16 +13,16 @@ class BugsService {
   }
 
   async getTrackedbugs(userid) {
-    const trackedbugs = await dbContext.TrackedBugs.find({ accountId: userid }).sort('-bug').populate('creator').populate('bug')
+    const trackedbugs = await dbContext.TrackedBugs.find({ accountId: userid }).sort('-bug').populate('tracker', 'name picture').populate('bug')
     return trackedbugs
   }
 
   // fantasy hand egg for how to stop user from tracking twice
   async createTrackedBug(body) {
     // const checkfortrackedbug = await this.getTrackedbugs(body.accountId)
-
+    // FIXME commented line 25
     const newbug = await dbContext.TrackedBugs.create(body)
-    await newbug.populate('creator', 'name picture')
+    // await newbug.populate('creator', 'name picture')
     await newbug.populate('bug', 'id')
     await newbug.populate('tracker', 'name picture')
     return newbug
@@ -37,7 +37,7 @@ class BugsService {
   }
 
   async getBugUsers(userId, bugId) {
-    const foundUsers = await dbContext.TrackedBugs.find({ bugId: bugId }).sort('-tracker').populate('creator', 'name picture').populate('tracker')
+    const foundUsers = await dbContext.TrackedBugs.find({ bugId: bugId }).sort('-tracker').populate('tracker', 'name picture')
     return foundUsers
   }
 
@@ -73,7 +73,7 @@ class BugsService {
     if (userId !== bugCreatorId) {
       throw new Forbidden('you cannot edit this bug')
     }
-    if (bug.closed) {
+    if (bug.closed === true) {
       throw new Forbidden('this bug is closed')
     }
     bug.title = body.title || bug.title

@@ -1,6 +1,9 @@
 <template>
   <div class="component">
     <div class="card">
+      <button @click.prevent="deleteNote">
+        delete Note
+      </button>
       <div class="card-header">
         Note creator: {{ note.creator.name }}
 
@@ -17,6 +20,7 @@ import { computed, onMounted } from '@vue/runtime-core'
 import { useRoute } from 'vue-router'
 import { bugsService } from '../services/BugsService'
 import { AppState } from '../AppState'
+import Pop from '../utils/Pop'
 export default {
   props: {
 
@@ -31,7 +35,16 @@ export default {
       bugsService.getBugNotes(route.params.bugId)
     })
     return {
-      notes: computed(() => AppState.notes)
+
+      notes: computed(() => AppState.notes),
+      async deleteNote() {
+        try {
+          debugger
+          await bugsService.removeNote(props.note.id)
+        } catch (error) {
+          Pop.toast(error, 'error')
+        }
+      }
     }
   }
 }

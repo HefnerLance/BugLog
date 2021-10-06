@@ -53,6 +53,7 @@ export class TrackedBugsController extends BaseController {
 
   async createTrackedBug(req, res, next) {
     try {
+      req.body.accountId = req.userInfo.id
       const newTrackedBug = await bugsService.createTrackedBug(req.body)
       res.send(newTrackedBug)
     } catch (error) {

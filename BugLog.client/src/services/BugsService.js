@@ -1,6 +1,7 @@
 import { AppState } from '../AppState'
 import { Bug } from '../models/Bug'
 import { api } from '../services/AxiosService'
+import { logger } from '../utils/Logger'
 class BugsService {
   async getBugs(query = '') {
     AppState.bugs = []
@@ -14,9 +15,10 @@ class BugsService {
     AppState.trackedBugs.unshift(res.data)
   }
 
-  async editBug(bugId) {
-    const res = await api.put('api/bugs/' + bugId.id)
-    AppState.bugs = new Bug(res.data)
+  async editBug(body, bugId) {
+    debugger
+    const res = await api.put('api/bugs/' + bugId, body)
+    AppState.bugs = (res.data)
   }
 
   async removeBug(bugId) {
@@ -32,6 +34,7 @@ class BugsService {
 
   async getBugById(bugId) {
     const res = await api.get('api/bugs/' + bugId)
+    debugger
     AppState.activeBug = res.data
     this.getBugNotes(bugId)
   }
@@ -41,20 +44,36 @@ class BugsService {
     AppState.notes = res.data
   }
 
-  async getTrackedBugsByAccount(accountId) {
+  async getTrackedBugsByAccount() {
     const res = await api.get('account/trackedbugs')
+    logger.log(res)
     AppState.trackedBugs = res.data
   }
 
-  async createNote(bugId, note) {
-    debugger
+  async createNote(note) {
     const res = await api.post('api/notes', note)
     AppState.notes = res.data
   }
 
-  async createTrackedBug(bugId, accountId) {
-    const res = await api.post('/api/trackedbugs', bugId)
+  async removeNote(noteId) {
+    const res = await api.delete('api/notes/' + noteId)
+    AppState.notes = res.data
+  }
+
+  async createTrackedBug(body) {
+    const res = await api.post('/api/trackedbugs', body)
     AppState.trackedBugs = (res.data)
+  }
+
+  async getTrackers(bugid) {
+    const res = await api.get('api/bugs/' + bugid + '/trackedbugs')
+    AppState.trackers = res.data
+    logger.log(res, 'getting trackers')
+  }
+
+  async untrackBug(bugId) {
+    const res = await api.delete('api/trackedbugs/' + bugId)
+    AppState.trackedBugs = res.data
   }
 }
 export const bugsService = new BugsService()

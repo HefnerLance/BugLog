@@ -4,7 +4,7 @@
     <img class="rounded" :src="account.picture" alt="" />
     <p>{{ account.email }}</p>
   </div>
-  <Bug v-for="b in bugs" :key="b.id" :bug="b" />
+  <BugTracked v-for="b in bugs" :key="b.id" :bug="b" :account="account" />
 </template>
 
 <script>
@@ -22,7 +22,6 @@ export default {
     // const route = useRoute()
     onMounted(async() => {
       try {
-        const accountId = AppState.account
         await bugsService.getTrackedBugsByAccount()
       } catch (error) {
         Pop.toast(error, 'error')

@@ -32,8 +32,8 @@ export default {
       async createnote() {
         try {
           debugger
-          const stuff = editable.value
-          await bugsService.createNote(editable.value, route.params.bugId)
+          editable.value.bugId = route.params.bugId
+          await bugsService.createNote(editable.value)
           editable.value = {}
           Pop.toast('note Created', 'success')
         } catch (error) {
