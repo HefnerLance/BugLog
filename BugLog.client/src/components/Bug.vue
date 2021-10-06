@@ -46,6 +46,7 @@
         <router-link :to="{name: 'Account', params:{bugId: bug.id}}">
           <li class="list-group-item">
             <img :src="account.picture" alt="User has no picture">
+            <h5>{{ bug.creator.name }}</h5>
           </li>
         </router-link>
         <li class="list-group-item">

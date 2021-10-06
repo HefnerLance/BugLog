@@ -28,13 +28,12 @@
           </router-link>
         </li>
       </ul> -->
-        <ul class="navbar-nav me-auto">
-          <li>
-            <router-link :to="{ name: 'Bugs' }" class="btn text-success lighten-30 selectable text-uppercase">
-              Bugs
-            </router-link>
-          </li>
-        </ul>
+        <li>
+          <router-link :to="{ name: 'Bugs' }" class="btn text-success lighten-30 selectable text-uppercase">
+            Bugs
+          </router-link>
+        </li>
+
         <!-- <ul class="navbar-nav me-auto">
         <li>
           <router-link :to="{ name: 'Bugs' }" class="btn text-success lighten-30 selectable text-uppercase">
@@ -127,6 +126,12 @@ a:hover {
 }
 .nav-link{
   text-transform: uppercase;
+}
+
+.navbar-nav{
+      width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 .navbar-nav .router-link-exact-active{
   border-bottom: 2px solid var(--bs-success);

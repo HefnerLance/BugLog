@@ -31,7 +31,6 @@ export default {
       editable,
       async createnote() {
         try {
-          debugger
           editable.value.bugId = route.params.bugId
           await bugsService.createNote(editable.value)
           editable.value = {}

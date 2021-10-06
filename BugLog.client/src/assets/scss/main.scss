@@ -9,6 +9,10 @@
   flex-direction: column;
   min-height: 100vh;
   background-color: $body-bg;
+  font-size: 1rem;
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.25rem;
+  font-weight: 500;
 }
 
 main {
@@ -22,6 +26,9 @@ a {
 input,
 textarea,
 select {
+
+  background-color: $light;
+
   &:not(:placeholder-shown) {
     &:valid {
       border: 1px solid $success;
@@ -35,4 +42,8 @@ select {
 form:invalid button[type="submit"] {
   filter: grayscale(1);
   pointer-events: none;
+}
+
+h1{
+  color: $dark;
 }

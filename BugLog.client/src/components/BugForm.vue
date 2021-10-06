@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="createBug()">
+  <form class="bugform" @submit.prevent="createBug()">
     <div class="form-group">
       <label for="title">title</label>
       <input type="text"
@@ -56,7 +56,6 @@ export default {
       editable,
       async createBug() {
         try {
-          debugger
           const bug = await bugsService.createBug(editable.value)
           editable.value = {}
           Pop.toast('Bug Created', 'success')
@@ -73,4 +72,10 @@ export default {
 </script>
 
 <style>
+.bugform{
+  padding: 2rem;
+      width: 50%;
+      margin: 0 auto;
+  }
+
 </style>

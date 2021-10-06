@@ -12,13 +12,13 @@
       </button>
     </div>
     <!-- i think this thing can change bg color when the statement is truw??????      V V  v v v v vVv !-->
-    <div class="card" :class="{'bg-primary': (bug.priority> 4)}">
+    <div class="card" :class="{'bg-primary': (buggy.priority> 4)}">
       <div class="card-header d-flex flex-row justify-content-around">
         <ul>
           <p>user</p>
         </ul>
         <ul>
-          <router-link :to="{name: 'BugDetails', params:{bugId: bug.id}}">
+          <router-link :to="{name: 'BugDetails', params:{bugId: buggy.id}}">
             <button type="submit">
               More details
             </button>
@@ -34,31 +34,31 @@
           <p>Priority</p>
         </ul>
         <ul>
-          <p :class="{'bg-danger': bug.closed}">
+          <p :class="{'bg-danger': buggy.bug.closed}">
             Status
           </p>
         </ul>
       </div>
       <ul class="list-group d-flex flex-row justify-content-around">
-        <router-link :to="{name: 'Account', params:{bugId: bug.id}}">
+        <router-link :to="{name: 'Account', params:{bugId: buggy.id}}">
           <li class="list-group-item">
             <img :src="account.picture" alt="User has no picture">
           </li>
         </router-link>
         <li class="list-group-item">
-          Title: {{ bug.title }}
+          Title: {{ buggy.bug.title }}
         </li>
         <li class="list-group-item">
-          Description {{ bug.description }}
+          Description: {{ buggy.bug.description }}
         </li>
         <li class="list-group-item">
-          Priority: {{ bug.priority }}
+          Priority: {{ buggy.bug.priority }}
         </li>
-        <li class="list-group-item" :class="{'bg-danger': (bug.closed)}">
-          Is closed:{{ bug.closed }}
+        <li class="list-group-item" :class="{'bg-danger': (buggy.bug.closed)}">
+          Is closed:{{ buggy.bug.closed }}
         </li>
         <li class="list-group-item">
-          {{ bug.updatedAt }}
+          {{ Dated }}
         </li>
         <button @click.prevent="untrackBug">
           Delete Tracked Bug
@@ -76,7 +76,7 @@ import { bugsService } from '../services/BugsService'
 import { useRoute } from 'vue-router'
 export default {
   props: {
-    bug: { type: Object, required: true },
+    buggy: { type: Object, required: true },
     account: { type: Object, required: true }
 
     // note: { type: Object }
@@ -86,9 +86,10 @@ export default {
     const form = ref({ showForm: false })
     return {
       form,
+      Dated: new Date(props.buggy.updatedAt).toDateString(),
       async untrackBug() {
         // const accountId = AppState.account.id
-        const bugId = props.bug.id
+        const bugId = props.buggy.id
         await bugsService.untrackBug(bugId)
       },
       async sortByPriorityAscending() {

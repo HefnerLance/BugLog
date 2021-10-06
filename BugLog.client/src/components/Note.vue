@@ -1,16 +1,15 @@
 <template>
   <div class="component">
     <div class="card">
-      <button @click.prevent="deleteNote">
+      <div class="card-header">
+        <span>Note creator:</span> {{ note.creator.name }}
+      </div>
+      <div class="card-body">
+        {{ note.body }}
+      </div>
+      <button class="btn-danger" @click.prevent="deleteNote">
         delete Note
       </button>
-      <div class="card-header">
-        Note creator: {{ note.creator.name }}
-
-        <div class="card-body">
-          {{ note.body }}
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -36,11 +35,9 @@ export default {
     })
     return {
 
-      notes: computed(() => AppState.notes),
       async deleteNote() {
         try {
-          debugger
-          await bugsService.removeNote(props.note.id)
+          await bugsService.removeNote(props.note.id, props.note.bugId)
         } catch (error) {
           Pop.toast(error, 'error')
         }
@@ -51,5 +48,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.card-header span{
+  font-size: 1.5rem;
+}
 </style>

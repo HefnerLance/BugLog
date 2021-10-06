@@ -16,7 +16,6 @@ class BugsService {
   }
 
   async editBug(body, bugId) {
-    debugger
     const res = await api.put('api/bugs/' + bugId, body)
     AppState.bugs = (res.data)
   }
@@ -34,7 +33,6 @@ class BugsService {
 
   async getBugById(bugId) {
     const res = await api.get('api/bugs/' + bugId)
-    debugger
     AppState.activeBug = res.data
     this.getBugNotes(bugId)
   }
@@ -51,13 +49,16 @@ class BugsService {
   }
 
   async createNote(note) {
-    const res = await api.post('api/notes', note)
-    AppState.notes = res.data
+    await api.post('api/notes', note)
+
+    this.getBugNotes(note.bugId)
   }
 
-  async removeNote(noteId) {
+  async removeNote(noteId, bugId) {
     const res = await api.delete('api/notes/' + noteId)
-    AppState.notes = res.data
+    this.getBugNotes(bugId)
+
+    return res
   }
 
   async createTrackedBug(body) {
