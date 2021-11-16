@@ -28,11 +28,11 @@
           <li>
             description: {{ bug.description }}
           </li>
-          <li>
+          <!-- <li>
             <button @click="createNote()" class="btn btn-secondary">
               create note
             </button>
-          </li>
+          </li> -->
         </ul>
       </div>
     </div>

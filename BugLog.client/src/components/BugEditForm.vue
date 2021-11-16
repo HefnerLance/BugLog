@@ -23,7 +23,7 @@
         <label for="priority">Priority</label>
         <input type="number"
                class="form-control bg-light"
-               name="body"
+               name="priority"
                placeholder="1-5"
                v-model="editable.priority"
                required
@@ -56,6 +56,7 @@ export default {
       editable,
       async editBug() {
         try {
+          debugger
           await bugsService.editBug(editable.value, route.params.bugId)
           editable.value = {}
           Pop.toast('Bug edit complete', 'success')

@@ -78,6 +78,7 @@ class BugsService {
     }
     bug.title = body.title || bug.title
     bug.description = body.description || bug.description
+    bug.priority = body.priority || bug.priority
     bug.closed = body.closed || bug.closed
     await bug.save()
     return bug
