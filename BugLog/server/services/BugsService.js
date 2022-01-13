@@ -8,7 +8,7 @@ class BugsService {
     if (userId !== bugToDelete.accountId.toString()) {
       throw new Forbidden('you cannot delete this')
     }
-    const deletedBug = await dbContext.TrackedBugs.findOneAndDelete({ bugId: bugId, accountId: userId })
+    const deletedBug = await dbContext.TrackedBugs.findByIdAndDelete(bugId)
     await dbContext.TrackedBugs.remove(deletedBug, bugToDelete)
   }
 

@@ -117,7 +117,7 @@ export default {
       async editBug() {
 
       },
-      // bugs: computed(() => AppState.trackedbugs),
+      bugs: computed(() => AppState.trackedbugs),
       users: computed(() => AppState.account)
     }
   }

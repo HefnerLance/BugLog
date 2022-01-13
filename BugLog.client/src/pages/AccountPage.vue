@@ -4,7 +4,9 @@
     <img class="rounded" :src="account.picture" alt="" />
     <p>{{ account.email }}</p>
   </div>
-  <BugTracked v-for="b in bugs" :key="b.id" :buggy="b" :account="account" />
+  <div>
+    <BugTracked v-for="b in bugs" :key="b.id" :buggy="b" :account="account" />
+  </div>
 </template>
 
 <script>

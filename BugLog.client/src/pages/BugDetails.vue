@@ -15,6 +15,12 @@
         </div>
       </div>
       <div class="card-body ">
+        <button @click="createTrackedBug(bug.id)" v-if="account.id !== trackers.tracker.id">
+          Track this Bug
+        </button>
+        <div v-else>
+          tracked
+        </div>
         <ul class=" d-flex flex-row justify-content-between">
           <li>
             priority: {{ bug.priority }}
@@ -50,6 +56,7 @@ import { useRoute } from 'vue-router'
 import { logger } from '../utils/Logger'
 // import { applyStyles } from '@popperjs/core'
 export default {
+
   setup() {
     const route = useRoute()
     const form = ref({ showForm: false })
@@ -58,6 +65,7 @@ export default {
         await bugsService.getBugById(route.params.bugId)
         await bugsService.getTrackers(route.params.bugId)
         await bugsService.getBugNotes(route.params.bugId)
+        // await bugsService.createTrackedBug(route.params.bugId)
       } catch (error) {
         Pop.toast(error, 'error')
       }
@@ -71,6 +79,14 @@ export default {
       notes: computed(() => AppState.notes),
       trackers: computed(() => AppState.trackers),
 
+      async createTrackedBug() {
+        await bugsService.createTrackedBug(route.params.bugId)
+      },
+      async untrackBug(bug) {
+        // const accountId = AppState.account.id
+
+        await bugsService.untrackBug(bugId)
+      },
       async createNote() {
         try {
           await bugsService.createNote(route.params.bugId)

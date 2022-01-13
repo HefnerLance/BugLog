@@ -56,7 +56,6 @@ export default {
       editable,
       async editBug() {
         try {
-          debugger
           await bugsService.editBug(editable.value, route.params.bugId)
           editable.value = {}
           Pop.toast('Bug edit complete', 'success')

@@ -31,10 +31,10 @@ class BugsService {
     return res.data
   }
 
-  async getBugById(bugId) {
-    const res = await api.get('api/bugs/' + bugId)
+  async getBugById(id) {
+    const res = await api.get('api/bugs/' + id)
     AppState.activeBug = res.data
-    this.getBugNotes(bugId)
+    this.getBugNotes(id)
   }
 
   async getBugNotes(bugId) {
@@ -61,9 +61,9 @@ class BugsService {
     return res
   }
 
-  async createTrackedBug(body) {
-    const res = await api.post('/api/trackedbugs', body)
-    AppState.trackedBugs = (res.data)
+  async createTrackedBug(id) {
+    const res = await api.post('/api/trackedbugs', { bugId: id })
+    AppState.trackedBugs.push(res.data)
   }
 
   async getTrackers(bugid) {
@@ -74,7 +74,7 @@ class BugsService {
 
   async untrackBug(bugId) {
     const res = await api.delete('api/trackedbugs/' + bugId)
-    AppState.trackedBugs = res.data
+    AppState.trackedBugs.unshift(res.data)
   }
 }
 export const bugsService = new BugsService()

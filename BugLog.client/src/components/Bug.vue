@@ -14,7 +14,7 @@
         sort closed
       </button>
     </div>
-    <!-- i think this thing can change bg color when the statement is truw??????      V V  v v v v vVv !-->
+    <!-- i think this thing can change bg color when the statement is true??????      V V  v v v v vVv !-->
     <div class="card" :class="{'bg-primary': (bug.priority> 4)}">
       <div class="card-header d-flex flex-row justify-content-around">
         <ul>
@@ -64,7 +64,7 @@
         <li class="list-group-item">
           {{ bug.updatedAt }}
         </li>
-        <button @click.prevent="createTrackedBug">
+        <button @click="createTrackedBug(bug.id)">
           Track this Bug
         </button>
       </ul>
@@ -90,11 +90,8 @@ export default {
     const form = ref({ showForm: false })
     return {
       form,
-      async createTrackedBug() {
-        const body = {}
-        body.bugId = props.bug.id
-
-        await bugsService.createTrackedBug(body)
+      async createTrackedBug(id) {
+        await bugsService.createTrackedBug(id)
       },
       async sortByPriorityAscending() {
         AppState.bugs.sort((a, b) => a.priority - b.priority)
